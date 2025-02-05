@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mind Map & Topic Summary</title>
+  <!-- Bootstrap CSS for styling -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body { background-color: #f8f9fa; }
+    .container { margin-top: 50px; }
+    .summary-output {
+      margin-top: 20px;
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="mb-4 text-center">Mind Map & Topic Summary</h1>
+    <form method="post">
+      <div class="form-group">
+        <label for="topic">Enter a Topic:</label>
+        <input type="text" class="form-control" id="topic" name="topic" placeholder="E.g., Artificial Intelligence" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Generate Summary</button>
+    </form>
+    
+    {% if topic and summary %}
+    <div class="summary-output">
+      <h2>Summary for topic</h2>
+      <textarea class="form-control" readonly rows="5">{{ summary }}</textarea>
+      <div class="text-center mt-3">
+        <a href="{{ url_for('result') }}?topic={{ topic }}" class="btn btn-secondary">
+          View Detailed Mind Map & Key Takeaways
+        </a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
