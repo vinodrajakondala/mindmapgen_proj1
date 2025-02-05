@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Detailed Mind Map</title>
+  <!-- Bootstrap CSS for styling -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <!-- vis-network CSS -->
+  <link href="https://unpkg.com/vis-network/styles/vis-network.min.css" rel="stylesheet" type="text/css" />
+  <style>
+    body {
+      background-color: #f4f6f9;
+      font-family: Arial, sans-serif;
+    }
+    .keypoints-card {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      background-color: #fff;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      margin-bottom: 20px;
+    }
+    .keypoints-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+    .keypoints-card ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+    #mynetwork {
+      width: 100%;
+      height: 600px;
+      border: 1px solid lightgray;
+      border-radius: 5px;
+    }
+    .btn-custom {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-4">
+  <div class="row">
+    <!-- Key Points Column -->
+    <div class="col-md-3">
+      <div class="keypoints-card">
+        <h2>Key Points</h2>
+        <ul>
+          {% for point in key_points %}
+            <li>{{ point }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <!-- Interactive Mind Map Column -->
+    <div class="col-md-9">
+      <div id="mynetwork"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <a href="{{ url_for('index') }}" class="btn btn-secondary btn-custom">
+        Generate Another Topic
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- Include vis-network JS -->
+<script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script type="text/javascript">
+    // Use the tojson filter to safely inject the Python objects as JSON.
+    var nodesData = {{ nodes | tojson }};
+    var edgesData = {{ edges | tojson }};
+    
+    // Create DataSets for nodes and edges.
+    var nodes = new vis.DataSet(nodesData);
+    var edges = new vis.DataSet(edgesData);
+    
+    // Create a network.
+    var container = document.getElementById('mynetwork');
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    var options = {
+        interaction: {
+            dragNodes: true,
+            zoomView: true,
+            dragView: true
+        },
+        physics: {
+            enabled: true,
+            solver: 'forceAtlas2Based',
+            forceAtlas2Based: {
+                gravitationalConstant: -50,
+                centralGravity: 0.01,
+                springLength: 100,
+                springConstant: 0.08
+            },
+            stabilization: {
+                iterations: 100
+            }
+        }
+    };
+    
+    var network = new vis.Network(container, data, options);
+</script>
+</body>
+</html>
